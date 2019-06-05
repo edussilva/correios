@@ -130,7 +130,11 @@ def parse_xml(xml):
     return data
 
 def get_servicos_list(data):
-    return data['Servicos']['cServico']
+    try:
+        d = data['Servicos']['cServico']
+    except (KeyError, TypeError):
+        d = [] 
+    return d
 
 
 def main():

@@ -4,6 +4,7 @@ import collections
 from correios.core import (
     get_url,
     parse_xml,
+    get_servicos_list,
 )
 
 class TestGetUrl(unittest.TestCase):
@@ -65,6 +66,27 @@ class TestParseXML(unittest.TestCase):
             }
         }
         self.assertEqual(parse_xml(self.xml), expected)
+
+
+
+class TestGetServicosList(unittest.TestCase):
+    def test_empty_dict(self):
+        data = {}
+        self.assertEqual(get_servicos_list(data), [])
+
+    def test_with_servicos_empty(self):
+        data = {
+            'Servicos': '',
+        }
+        self.assertEqual(get_servicos_list(data), [])
+
+    def test_with_servicos_and_servico_not_dict(self):
+        data = {
+            'Servicos': {
+                'cServico': ['foo', 'bar'],
+            }
+        }
+        self.assertEqual(get_servicos_list(data), ['foo', 'bar'])
 
 
 if __name__ == '__main__':
