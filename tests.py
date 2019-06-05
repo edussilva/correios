@@ -3,6 +3,7 @@ import collections
 
 from correios.core import (
     get_url,
+    parse_xml,
 )
 
 class TestGetUrl(unittest.TestCase):
@@ -29,6 +30,37 @@ class TestGetUrl(unittest.TestCase):
         
         expected = 'http://test.com/?foo=bar&uni=duni+te&abra=cadabra'
         self.assertEqual(get_url(self.endpoint, params), expected)
+
+
+class TestParseXML(unittest.TestCase):
+    def setUp(self):
+        self.xml = """<?xml version="1.0" encoding="ISO-8859-1" ?>
+        <Servicos>
+            <cServico>
+                <Codigo>04510</Codigo>
+                <Valor>26,20</Valor>
+                <PrazoEntrega>6</PrazoEntrega>
+            </cServico>
+        </Servicos>"""
+
+    def test_empty_xml(self):
+        xml = '<?xml version="1.0" encoding="ISO-8859-1" ?><Servicos></Servicos>'
+        expected = {
+            'Servicos': None,
+        }
+        self.assertEqual(parse_xml(xml), expected)
+
+    def test_parse_xml_ok(self):
+        expected = {
+            'Servicos': {
+                'cServico': {
+                    'Codigo': '04510',
+                    'Valor': '26,20',
+                    'PrazoEntrega': '6',
+                }
+            }
+        }
+        self.assertEqual(parse_xml(self.xml), expected)
 
 
 if __name__ == '__main__':

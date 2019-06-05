@@ -121,7 +121,7 @@ def handle_request(url):
     response = f.read().decode('utf-8')
     return response
 
-def parse(xml):
+def parse_xml(xml):
     return xmltodict.parse(xml)
 
 def get_servicos_list(data):
@@ -130,6 +130,6 @@ def get_servicos_list(data):
 
 def main():
     url = get_url(ENDPOINT, PARAMS_TESTE)
-    data = parse(handle_request(url))
+    data = parse_xml(handle_request(url))
     fretes = get_servicos_list(data)
     return fretes
