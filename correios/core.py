@@ -128,10 +128,8 @@ def get_servicos_list(data):
     return data['Servicos']['cServico']
 
 
-if __name__ == '__main__':
+def main():
     url = get_url(ENDPOINT, PARAMS_TESTE)
     data = parse(handle_request(url))
     fretes = get_servicos_list(data)
-    import pprint
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(fretes)
+    return fretes
