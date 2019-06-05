@@ -3,6 +3,7 @@ import urllib.request
 import urllib.parse
 
 import xmltodict
+from xml.parsers.expat import ExpatError
 
 
 errors = {
@@ -122,7 +123,11 @@ def handle_request(url):
     return response
 
 def parse_xml(xml):
-    return xmltodict.parse(xml)
+    try:
+        data = xmltodict.parse(xml)
+    except ExpatError:
+        data = {}
+    return data
 
 def get_servicos_list(data):
     return data['Servicos']['cServico']

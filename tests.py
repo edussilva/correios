@@ -43,7 +43,11 @@ class TestParseXML(unittest.TestCase):
             </cServico>
         </Servicos>"""
 
-    def test_empty_xml(self):
+    def test_empty_string(self):
+        xml = ''
+        self.assertEqual(parse_xml(xml), {})
+
+    def test_xml_with_empty_value(self):
         xml = '<?xml version="1.0" encoding="ISO-8859-1" ?><Servicos></Servicos>'
         expected = {
             'Servicos': None,
