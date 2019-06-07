@@ -5,6 +5,8 @@ import urllib.parse
 import xmltodict
 from xml.parsers.expat import ExpatError
 
+from correios.config import ENDPOINT, ERRORS
+
 
 PARAMS_TESTE = {
     'nCdEmpresa': '08082650',
@@ -49,7 +51,7 @@ def get_servicos_list(data):
     return d
 
 
-def main():
+def fretes():
     url = get_url(ENDPOINT, PARAMS_TESTE)
     data = parse_xml(handle_request(url))
     fretes = get_servicos_list(data)

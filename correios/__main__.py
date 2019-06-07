@@ -1,5 +1,5 @@
 from pprint import pprint
-from correios.core import main
+from correios.core import fretes
 
 
-pprint(main())
+pprint(fretes())
