@@ -1,0 +1,1 @@
+from correios.core import calc_preco_prazo

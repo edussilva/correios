@@ -32,9 +32,9 @@ def get_url(endpoint, params):
     return f'{endpoint}?{querystring}'
 
 def handle_request(url):
-    f = urlopen(url)
-    response = f.read().decode('utf-8')
-    return response
+    response= urlopen(url)
+    raw = response.read().decode('utf-8')
+    return raw
 
 def parse_xml(xml):
     try:
@@ -50,9 +50,30 @@ def get_servicos_list(data):
         d = [] 
     return d
 
-
-def fretes():
-    url = get_url(ENDPOINT, PARAMS_TESTE)
-    data = parse_xml(handle_request(url))
+def calc_preco_prazo(cep_origem, cep_destino, peso, altura, largura, comprimento,
+        servicos=['04510', '04014'], empresa='', senha='', **kwargs):
+    params = {        
+        'nCdFormato': '1',
+        'sCdMaoPropria': 'n',
+        'nVlValorDeclarado': '0',
+        'sCdAvisoRecebimento': 'n',
+        'nVlDiametro': '0',
+        'StrRetorno': 'xml',
+        'nIndicaCalculo': '3',    
+    }
+    params['nCdServico'] = ','.join(servicos)
+    params['sCepOrigem'] = cep_origem
+    params['sCepDestino'] = cep_destino
+    params['nVlPeso'] = peso
+    params['nVlComprimento'] = comprimento
+    params['nVlAltura'] = altura
+    params['nVlLargura'] = largura
+    params['nCdEmpresa'] = empresa
+    params['sDsSenha'] = senha
+    params.update(kwargs)
+    
+    url = get_url(ENDPOINT, params)
+    raw = handle_request(url)
+    data = parse_xml(raw)
     fretes = get_servicos_list(data)
     return fretes

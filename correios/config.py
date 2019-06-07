@@ -9,7 +9,7 @@ SERVICOS_SEM_CONTRATO = {
     '40290': 'SEDEX Hoje Varejo*',
 }
 
-ENDPOINT = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?"
+ENDPOINT = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx"
 
 ERRORS = {
     '0': 'Processamento com sucesso',
