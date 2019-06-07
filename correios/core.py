@@ -1,6 +1,7 @@
 
 from urllib.request import urlopen
 import urllib.parse
+from decimal import Decimal
 
 import xmltodict
 from xml.parsers.expat import ExpatError
@@ -50,8 +51,40 @@ def get_servicos_list(data):
         d = [] 
     return d
 
-def calc_preco_prazo(cep_origem, cep_destino, peso, altura, largura, comprimento,
-        servicos=['04510', '04014'], empresa='', senha='', **kwargs):
+def convert_types(servicos):
+    list_dicts = []
+    for s in servicos:
+        keys = s.keys()
+        if 'Valor' in keys:
+            valor = s['Valor'].replace(',', '.')
+            s['Valor'] = Decimal(valor)
+
+        if 'PrazoEntrega' in keys:
+            s['PrazoEntrega'] = int(s['PrazoEntrega'])
+            
+        if 'ValorSemAdicionais' in keys:
+            valor = s['ValorSemAdicionais'].replace(',', '.')
+            s['ValorSemAdicionais'] = Decimal(valor)
+            
+        if 'ValorMaoPropria' in keys:
+            valor = s['ValorMaoPropria'].replace(',', '.')
+            s['ValorMaoPropria'] = Decimal(valor)
+            
+        if 'ValorAvisoRecebimento' in keys:
+            valor = s['ValorAvisoRecebimento'].replace(',', '.')
+            s['ValorAvisoRecebimento'] = Decimal(valor)
+            
+        if 'ValorValorDeclarado' in keys:
+            valor = s['ValorValorDeclarado'].replace(',', '.')
+            s['ValorValorDeclarado'] = Decimal(valor)
+            
+        list_dicts.append(s)
+    return list_dicts
+
+
+def calc_preco_prazo(cep_origem, cep_destino, peso, altura, largura, 
+        comprimento, servicos=['04510', '04014'], empresa='', senha='', 
+        clean_types=True, **kwargs):
     params = {        
         'nCdFormato': '1',
         'sCdMaoPropria': 'n',
@@ -76,4 +109,6 @@ def calc_preco_prazo(cep_origem, cep_destino, peso, altura, largura, comprimento
     raw = handle_request(url)
     data = parse_xml(raw)
     fretes = get_servicos_list(data)
+    if clean_types:
+        fretes = convert_types(fretes)
     return fretes
