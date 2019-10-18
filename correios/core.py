@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import urllib.parse
 from decimal import Decimal
 
+import requests
 import xmltodict
 from xml.parsers.expat import ExpatError
 
@@ -15,9 +16,8 @@ def get_url(endpoint, params):
 
 
 def handle_request(url):
-    response= urlopen(url)
-    raw = response.read().decode('utf-8')
-    return raw
+    response = requests.get(url)
+    return response.text
 
 
 def parse_xml(xml):
