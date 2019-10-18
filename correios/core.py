@@ -10,6 +10,13 @@ from xml.parsers.expat import ExpatError
 from correios.config import ENDPOINT, ERRORS
 
 
+class CorreioException(Exception):
+    """
+    Exibe a mensagem de erro da api
+    """
+    pass
+
+
 def get_url(endpoint, params):
     querystring = urllib.parse.urlencode(params, doseq=True)
     return f'{endpoint}?{querystring}'
@@ -32,7 +39,15 @@ def get_servicos_list(data):
     try:
         d = data['Servicos']['cServico']
     except (KeyError, TypeError):
-        d = [] 
+        d = []
+
+    if isinstance(d, dict) and d.get('Erro') != '0':
+        msg = 'Erro {codigo} ({desc}): {mensagem}'.format(
+            codigo=d.get('Erro'),
+            desc=ERRORS.get(d.get('Erro')),
+            mensagem=d.get('MsgErro')
+        )
+        raise CorreioException(msg)
     return d
 
 
@@ -40,6 +55,9 @@ def convert_types(servicos):
     """
     Converte os valores recebidos nos tipos adequados
     """
+    if isinstance(servicos, dict):
+        servicos = [servicos,]
+
     list_dicts = []
     for s in servicos:
         keys = s.keys()
