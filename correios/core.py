@@ -9,33 +9,16 @@ from xml.parsers.expat import ExpatError
 from correios.config import ENDPOINT, ERRORS
 
 
-PARAMS_TESTE = {
-    'nCdEmpresa': '08082650',
-    'sDsSenha': '564321',
-    'sCepOrigem': '70002900',
-    'sCepDestino': '04547000',
-    'nVlPeso': '1',
-    'nCdFormato': '1',
-    'nVlComprimento': '20',
-    'nVlAltura': '20',
-    'nVlLargura': '20',
-    'sCdMaoPropria': 'n',
-    'nVlValorDeclarado': '0',
-    'sCdAvisoRecebimento': 'n',
-    'nCdServico': '04510,04014',
-    'nVlDiametro': '0',
-    'StrRetorno': 'xml',
-    'nIndicaCalculo': '3',
-}
-
 def get_url(endpoint, params):
     querystring = urllib.parse.urlencode(params, doseq=True)
     return f'{endpoint}?{querystring}'
+
 
 def handle_request(url):
     response= urlopen(url)
     raw = response.read().decode('utf-8')
     return raw
+
 
 def parse_xml(xml):
     try:
@@ -44,6 +27,7 @@ def parse_xml(xml):
         data = {}
     return data
 
+
 def get_servicos_list(data):
     try:
         d = data['Servicos']['cServico']
@@ -51,7 +35,11 @@ def get_servicos_list(data):
         d = [] 
     return d
 
+
 def convert_types(servicos):
+    """
+    Converte os valores recebidos nos tipos adequados
+    """
     list_dicts = []
     for s in servicos:
         keys = s.keys()
